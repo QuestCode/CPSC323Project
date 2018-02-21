@@ -31,6 +31,8 @@ int lex();
 /* Token codes */
 #define INT_LIT 10
 #define IDENT 11
+#define REAL_LIT 12
+
 #define ASSIGN_OP 20
 #define ADD_OP 21
 #define SUB_OP 22
