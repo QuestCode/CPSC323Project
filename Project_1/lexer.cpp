@@ -22,7 +22,6 @@ void Lexer::addCharacter() {
 
 void Lexer::getCharacter() {
   if ((nextCharacter = getc(in_fp)) != EOF) {
-		// printf("%c\n",nextChar );
     if (isalpha(nextCharacter))
       characterClass = LETTER;
     else if (isdigit(nextCharacter))
@@ -52,7 +51,6 @@ int Lexer::lexer() {
       getCharacter();
 
 			if (!isspace(nextCharacter)) {
-				// printf("No Space\n");
 				while (characterClass == LETTER || characterClass == DIGIT) {
 	          addCharacter();
 	          getCharacter();
@@ -68,7 +66,6 @@ int Lexer::lexer() {
       break;
     /* Parse integer literals */
     case DIGIT:
-			// printf("Digit\n" );
       addCharacter();
       getCharacter();
       while (characterClass == DIGIT) {
@@ -170,7 +167,7 @@ void Lexer::printResult(int token) {
       }
 
       if(nextToken != KEYWORD) {
-          printf("%s\t\t%s\n", id[0].c_str(),lexeme);
+          printf("%s\t%s\n", id[0].c_str(),lexeme);
       } else {
           printf("%s\t\t%s\n", id[1].c_str(),lexeme);
       }
@@ -185,10 +182,10 @@ void Lexer::printResult(int token) {
     case LEFT_PAREN:
     case RIGHT_BLOCK:
     case RIGHT_PAREN:
-      printf("%s\t\t%s\n", id[4].c_str(),lexeme);
+      printf("%s\t%s\n", id[4].c_str(),lexeme);
     break;
     default:
-      printf("%s\t\t%s\n", id[5].c_str(),lexeme);
+      printf("%s\t%s\n", id[5].c_str(),lexeme);
     break;
   }
 }
