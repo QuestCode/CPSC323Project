@@ -158,7 +158,7 @@ int Lexer::lookup(char ch) {
 }
 
 void Lexer::printResult(int token) {
-  std::string id[5] = {"identifier","keyword", "integer", "real", "operator"};
+  std::string id[6] = {"identifier","keyword", "integer", "real","separator","operator"};
   std::string keywords[] = {"int","if","else","endif","while","return","get","put"};
 
   switch (token) {
@@ -181,8 +181,14 @@ void Lexer::printResult(int token) {
     case REAL_LIT:
       printf("%s\t\t%s\n", id[3].c_str(),lexeme);
     break;
-    default:
+    case LEFT_BLOCK:
+    case LEFT_PAREN:
+    case RIGHT_BLOCK:
+    case RIGHT_PAREN:
       printf("%s\t\t%s\n", id[4].c_str(),lexeme);
+    break;
+    default:
+      printf("%s\t\t%s\n", id[5].c_str(),lexeme);
     break;
   }
 }
