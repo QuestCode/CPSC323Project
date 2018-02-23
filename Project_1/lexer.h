@@ -47,6 +47,7 @@ class Lexer {
     #define EQ_OP 25
     #define LT_OP 26
     #define GT_OP 27
+    #define COM_OP 28
     #define LEFT_PAREN 30
     #define RIGHT_PAREN 31
     #define LEFT_BLOCK 32

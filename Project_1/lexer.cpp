@@ -147,6 +147,10 @@ int Lexer::lookup(char ch) {
   		addCharacter();
   		nextToken = GT_OP;
 		break;
+    case '!':
+  		addCharacter();
+  		nextToken = COM_OP;
+		break;
 		default:
 			nextToken = EOF;
 		break;
@@ -184,7 +188,10 @@ void Lexer::printResult(int token) {
     case RIGHT_PAREN:
       printf("%s\t%s\n", id[4].c_str(),lexeme);
     break;
+    case EOF:
+    break;
     default:
+      /* operators tokens code */
       printf("%s\t%s\n", id[5].c_str(),lexeme);
     break;
   }
