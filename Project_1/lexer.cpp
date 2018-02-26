@@ -57,7 +57,7 @@ int Lexer::lexer() {
             if (characterClass == LETTER) {
               nextToken = IDENT;
             } else if (characterClass == DIGIT) {
-              nextToken = UNKNOWN;
+              nextToken = DIGIT;
             }
 	      }
 
