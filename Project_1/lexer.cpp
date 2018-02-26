@@ -54,15 +54,22 @@ int Lexer::lexer() {
 				while (characterClass == LETTER || characterClass == DIGIT) {
 	          addCharacter();
 	          getCharacter();
+            if (characterClass == LETTER) {
+              nextToken = IDENT;
+            } else if (characterClass == DIGIT) {
+              nextToken = UNKNOWN;
+            }
 	      }
 
 				if (characterClass == LETTER || characterClass == DOLLAR_SIGN) {
 						addCharacter();
 						getCharacter();
+            nextToken = IDENT;
 				}
-			}
+			} else {
+        nextToken = IDENT;
+      }
 
-      nextToken = IDENT;
       break;
     /* Parse integer literals */
     case DIGIT:
@@ -188,11 +195,21 @@ void Lexer::printResult(int token) {
     case RIGHT_PAREN:
       printf("%s\t%s\n", id[4].c_str(),lexeme);
     break;
+    case ADD_OP:
+    case SUB_OP:
+    case MULT_OP:
+    case DIV_OP:
+    case EQ_OP:
+    case LT_OP:
+    case GT_OP:
+    case COM_OP:
+      /* operators tokens code */
+      printf("%s\t%s\n", id[5].c_str(),lexeme);
+    break;
     case EOF:
     break;
     default:
-      /* operators tokens code */
-      printf("%s\t%s\n", id[5].c_str(),lexeme);
+      printf("UNKNOWN\t\t%s\n",lexeme);
     break;
   }
 }
