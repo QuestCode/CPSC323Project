@@ -83,7 +83,7 @@ int Lexer::lexer() {
 			if (characterClass == PERIOD) {
 				addCharacter();
         getCharacter();
-
+        nextToken = PERIOD;
 				while (characterClass == DIGIT) {
 	        addCharacter();
 	        getCharacter();

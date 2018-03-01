@@ -23,16 +23,24 @@ void getChar();
 void getNonBlank();
 int lex();
 
+
+/* Identifiers Token codes */
+#define INIT 01
+#define LETTER 02
+#define DIGIT 03
+#define DOLLAR_SIGN 04
+
 /* Character classes */
-#define LETTER 0
-#define DIGIT 1
 #define UNKNOWN 99
 
-/* Token codes */
+/* Real or Integer Token codes */
+#define PERIOD 07
+
 #define INT_LIT 10
 #define IDENT 11
 #define REAL_LIT 12
 
+/* Operator Token codes */
 #define ASSIGN_OP 20
 #define ADD_OP 21
 #define SUB_OP 22
@@ -41,6 +49,8 @@ int lex();
 #define EQ_OP 25
 #define LEFT_PAREN 26
 #define RIGHT_PAREN 27
+#define LEFT_BLOCK 28
+#define RIGHT_BLOCK 29
 
 
 
@@ -61,13 +71,13 @@ int main() {
 and return the token */
 int lookup(char ch) {
 	switch (ch) {
-		case '(':
+		case '[':
 			addChar();
-			nextToken = LEFT_PAREN;
+			nextToken = LEFT_BLOCK;
 		break;
-		case ')':
+		case ']':
 			addChar();
-			nextToken = RIGHT_PAREN;
+			nextToken = RIGHT_BLOCK;
 		break;
 		case '+':
 			addChar();
@@ -88,6 +98,14 @@ int lookup(char ch) {
 		case '=':
 			addChar();
 			nextToken = EQ_OP;
+		break;
+		case '(':
+		addChar();
+		nextToken = LEFT_PAREN;
+		break;
+		case ')':
+		addChar();
+		nextToken = RIGHT_PAREN;
 		break;
 		default:
 			addChar();
@@ -113,10 +131,15 @@ void addChar() {
 input and determine its character class */
 void getChar() {
   if ((nextChar = getc(in_fp)) != EOF) {
+		// printf("%c\n",nextChar );
     if (isalpha(nextChar))
       charClass = LETTER;
     else if (isdigit(nextChar))
       charClass = DIGIT;
+		else if (nextChar == '$')
+			charClass = DOLLAR_SIGN;
+		else if (nextChar == '.')
+			charClass = PERIOD;
     else charClass = UNKNOWN;
   } else {
       charClass = EOF;
@@ -130,8 +153,6 @@ void getNonBlank() {
     getChar();
 }
 
-
-
 /*****************************************************/
 /* lex - a simple lexical analyzer for arithmetic
 expressions */
@@ -143,21 +164,45 @@ int lex() {
     case LETTER:
       addChar();
       getChar();
-      while (charClass == LETTER || charClass == DIGIT) {
-          addChar();
-          getChar();
-      }
+
+			if (!isspace(nextChar)) {
+				// printf("No Space\n");
+				while (charClass == LETTER || charClass == DIGIT) {
+	          addChar();
+	          getChar();
+	      }
+
+				if (charClass == LETTER || charClass == DOLLAR_SIGN) {
+						addChar();
+						getChar();
+				}
+			}
+
       nextToken = IDENT;
       break;
     /* Parse integer literals */
     case DIGIT:
+			// printf("Digit\n" );
       addChar();
       getChar();
       while (charClass == DIGIT) {
         addChar();
         getChar();
       }
-      nextToken = INT_LIT;
+
+			if (charClass == PERIOD) {
+				addChar();
+        getChar();
+
+				while (charClass == DIGIT) {
+	        addChar();
+	        getChar();
+	      }
+
+				nextToken = REAL_LIT;
+			} else {
+				nextToken = INT_LIT;
+			}
       break;
       /* Parentheses and operators */
       case UNKNOWN:
