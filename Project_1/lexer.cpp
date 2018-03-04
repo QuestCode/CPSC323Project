@@ -54,6 +54,7 @@ int Lexer::lexer() {
 				while (characterClass == LETTER || characterClass == DIGIT) {
 	          addCharacter();
 	          getCharacter();
+            // Check if next character is either a digit or letter
             if (characterClass == LETTER) {
               nextToken = IDENT;
             } else if (characterClass == DIGIT) {
@@ -83,13 +84,12 @@ int Lexer::lexer() {
 			if (characterClass == PERIOD) {
 				addCharacter();
         getCharacter();
-        nextToken = PERIOD;
+        printf("%c\n",nextCharacter);
 				while (characterClass == DIGIT) {
 	        addCharacter();
 	        getCharacter();
+          nextToken = REAL_LIT;
 	      }
-
-				nextToken = REAL_LIT;
 			} else {
 				nextToken = INT_LIT;
 			}
