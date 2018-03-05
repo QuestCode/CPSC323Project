@@ -84,7 +84,6 @@ int Lexer::lexer() {
 			if (characterClass == PERIOD) {
 				addCharacter();
         getCharacter();
-        printf("%c\n",nextCharacter);
 				while (characterClass == DIGIT) {
 	        addCharacter();
 	        getCharacter();
