@@ -26,6 +26,7 @@ class Lexer {
     #define LETTER 02
     #define DIGIT 03
     #define DOLLAR_SIGN 04
+    #define COMMENT 05
 
     /* Character classes */
     #define UNKNOWN 99
@@ -37,9 +38,10 @@ class Lexer {
     #define INT_LIT 11
     #define REAL_LIT 12
     #define KEYWORD 13
+    #define COM 14
 
     /* Operator Token codes */
-    #define ASSIGN_OP 20
+    #define COMMENT_OP 20
     #define ADD_OP 21
     #define SUB_OP 22
     #define MULT_OP 23
@@ -47,11 +49,17 @@ class Lexer {
     #define EQ_OP 25
     #define LT_OP 26
     #define GT_OP 27
-    #define COM_OP 28
+    #define COLON_OP 28
+    #define SEMICOLON_OP 29
+
     #define LEFT_PAREN 30
     #define RIGHT_PAREN 31
     #define LEFT_BLOCK 32
     #define RIGHT_BLOCK 33
+    #define LEFT_CURLY_BRACE 34
+    #define RIGHT_CURLY_BRACE 35
+    #define PERCENT_OP 36
+    #define COMMA_OP 37
 
   public:
     void checkFile();
