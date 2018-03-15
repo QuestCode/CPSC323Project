@@ -38,6 +38,7 @@ class Lexer {
     #define INT_LIT 11
     #define REAL_LIT 12
     #define KEYWORD 13
+    #define BOOLEAN_ 32
     #define COM 14
 
     /* Operator Token codes */
@@ -51,15 +52,19 @@ class Lexer {
     #define GT_OP 27
     #define COLON_OP 28
     #define SEMICOLON_OP 29
+    #define UP_EQ_OP 30
+    #define EQ_LT_OP 31
+    #define EQ_GT_OP 32
+    #define EQ_EQ_OP 33
 
-    #define LEFT_PAREN 30
-    #define RIGHT_PAREN 31
-    #define LEFT_BLOCK 32
-    #define RIGHT_BLOCK 33
-    #define LEFT_CURLY_BRACE 34
-    #define RIGHT_CURLY_BRACE 35
-    #define PERCENT_OP 36
-    #define COMMA_OP 37
+    #define LEFT_PAREN 40
+    #define RIGHT_PAREN 41
+    #define LEFT_BLOCK 42
+    #define RIGHT_BLOCK 43
+    #define LEFT_CURLY_BRACE 44
+    #define RIGHT_CURLY_BRACE 45
+    #define PERCENT_OP 46
+    #define COMMA_OP 47
 
   public:
     void checkFile();

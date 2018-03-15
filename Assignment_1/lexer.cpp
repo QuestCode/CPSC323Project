@@ -158,10 +158,17 @@ int Lexer::lookup(char ch) {
 		case '=':
 			addCharacter();
 			nextToken = EQ_OP;
-      getCharacter();
-      if (nextCharacter == '=') {
-        addCharacter();
-      }
+            getCharacter();
+            if (nextCharacter == '=') {
+                addCharacter();
+                nextToken = EQ_EQ_OP;
+            } else if (nextCharacter == '>') {
+                addCharacter();
+                nextToken = EQ_GT_OP;
+            } else if (nextCharacter == '<') {
+                addCharacter();
+                nextToken = EQ_LT_OP;
+            }
 		break;
 		case '(':
   		addCharacter();
@@ -171,6 +178,14 @@ int Lexer::lookup(char ch) {
   		addCharacter();
   		nextToken = RIGHT_PAREN;
 		break;
+      case '^':
+          addCharacter();
+          getCharacter();
+          if (nextCharacter == '=') {
+              addCharacter();
+              nextToken = EQ_EQ_OP;
+          }
+          break;
       case '<':
   		addCharacter();
   		nextToken = LT_OP;
@@ -197,7 +212,11 @@ int Lexer::lookup(char ch) {
 		  break;
       case '%':
     		addCharacter();
-    		nextToken = PERCENT_OP;
+            getCharacter();
+            if (nextCharacter == '%') {
+              addCharacter();
+              nextToken = PERCENT_OP;
+            }
 		  break;
       case ',':
     		addCharacter();
@@ -211,8 +230,8 @@ int Lexer::lookup(char ch) {
 }
 
 void Lexer::printResult(int token) {
-  std::string id[7] = {"identifier","keyword", "integer", "real","separator","operator","comment"};
-  std::string keywords[] = {"int","if","else","endif","while","return","get","put","function"};
+  std::string id[] = {"identifier","keyword", "integer", "real","separator","operator","comment","boolean"};
+  std::string keywords[] = {"if","else","endif","while","return","get","put","function"};
 
   switch (token) {
     case IDENT:
@@ -257,6 +276,10 @@ void Lexer::printResult(int token) {
     case PERCENT_OP:
     case COMMENT_OP:
     case COMMA_OP:
+    case UP_EQ_OP:
+    case EQ_LT_OP:
+    case EQ_GT_OP:
+    case EQ_EQ_OP:
       /* operators tokens code */
       printf("%s\t%s\n", id[5].c_str(),lexeme);
     break;
