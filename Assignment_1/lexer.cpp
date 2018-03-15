@@ -100,8 +100,7 @@ int Lexer::lexer() {
         getCharacter();
 
         if (nextCharacter == '=') {
-            lookup(nextCharacter);
-            getCharacter();
+            nextToken = EOF;
         } else {
           nextToken = COM;
           while (characterClass != COMMENT) {
@@ -180,6 +179,7 @@ int Lexer::lookup(char ch) {
 		break;
       case '^':
           addCharacter();
+          nextToken = EOF;
           getCharacter();
           if (nextCharacter == '=') {
               addCharacter();
@@ -231,7 +231,7 @@ int Lexer::lookup(char ch) {
 
 void Lexer::printResult(int token) {
   std::string id[] = {"identifier","keyword", "integer", "real","separator","operator","comment","boolean"};
-  std::string keywords[] = {"if","else","endif","while","return","get","put","function"};
+  std::string keywords[] = {"if","else","endif","while","return","get","put","function","int"};
 
   switch (token) {
     case IDENT:
