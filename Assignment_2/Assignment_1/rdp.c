@@ -11,6 +11,26 @@ void advance();
 void Td();
 void Ed();
 
+
+int main() {
+    int i;
+    printf("Enter Input String ");
+    scanf("%s",input);
+    l=strlen(input);
+    input[l]='$';
+    advance();
+    E();
+    if(pos==l) {
+        printf("String Accepted\n");
+        for(i=0;i<=st;i++) {
+            printf("%s\n",prod[i]);
+        }
+    } else {
+        printf("String rejected\n");
+    }
+    return 0;
+}
+
 void advance() {
     pos++;
     if(pos<l) {
@@ -96,25 +116,4 @@ void F() {
         strcpy(prod[++st],"F->num");
         advance();
     }
-}
-
-
-int main() {
-    int i;
-    printf("Enter Input String ");
-    scanf("%s",input);
-    l=strlen(input);
-    input[l]='$';
-    advance();
-    E();
-    if(pos==l) {
-        printf("String Accepted\n");
-        for(i=0;i<=st;i++) {
-            printf("%s\n",prod[i]);
-        }
-    } else {
-        printf("String rejected\n");
-    }
-    // getch();
-    return 0;
 }

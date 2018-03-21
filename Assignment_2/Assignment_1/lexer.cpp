@@ -4,7 +4,7 @@ void Lexer::checkFile() {
   if ((in_fp = std::fopen("sample.RAT18S", "r")) == NULL)
 	printf("ERROR - cannot open sample.RAT18S \n");
 	else {
-	   getCharacter();
+	    getCharacter();
     	do {
     	   lexer();
     	} while (nextToken != EOF);
@@ -231,7 +231,7 @@ int Lexer::lookup(char ch) {
 
 void Lexer::printResult(int token) {
   std::string id[] = {"identifier","keyword", "integer", "real","separator","operator","comment","boolean"};
-  std::string keywords[] = {"if","else","endif","while","return","get","put","function","int"};
+  std::string keywords[] = {"if","else","endif","while","return","get","put","function","int","boolean","real"};
 
   switch (token) {
     case IDENT:
@@ -289,4 +289,8 @@ void Lexer::printResult(int token) {
       printf("UNKNOWN\t\t%s\n",lexeme);
     break;
   }
+}
+
+char* Lexer::getLexeme() {
+  return lexeme;
 }

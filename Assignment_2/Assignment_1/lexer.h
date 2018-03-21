@@ -8,7 +8,7 @@
 class Lexer {
   private:
     int characterClass;
-    char lexeme[100];
+    char lexeme[300];
     char nextCharacter;
     int lexemeLength;
     int token;
@@ -19,7 +19,6 @@ class Lexer {
     void getNonBlank();
     int lookup(char ch);
     void printResult(int token);
-    int lexer();
 
   public:
     /* Identifiers Token codes */
@@ -39,7 +38,7 @@ class Lexer {
     #define INT_LIT 11
     #define REAL_LIT 12
     #define KEYWORD 13
-    #define BOOLEAN_ 32
+    #define BOOLEAN_LIT 32
     #define COM 14
 
     /* Operator Token codes */
@@ -66,8 +65,11 @@ class Lexer {
     #define RIGHT_CURLY_BRACE 45
     #define PERCENT_OP 46
     #define COMMA_OP 47
-    
+
+
+    int lexer();
     void checkFile();
+    char* getLexeme();
 
 };
 #endif
