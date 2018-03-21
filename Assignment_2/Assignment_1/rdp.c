@@ -1,6 +1,5 @@
 #include "stdio.h"
 #include "string.h"
-// #include "conio.h"
 char input[100];
 char prod[100][100];
 int pos=-1,l,st=-1;

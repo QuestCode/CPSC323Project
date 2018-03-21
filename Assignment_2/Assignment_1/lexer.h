@@ -21,6 +21,7 @@ class Lexer {
     void printResult(int token);
     int lexer();
 
+  public:
     /* Identifiers Token codes */
     #define INIT 01
     #define LETTER 02
@@ -65,8 +66,7 @@ class Lexer {
     #define RIGHT_CURLY_BRACE 45
     #define PERCENT_OP 46
     #define COMMA_OP 47
-
-  public:
+    
     void checkFile();
 
 };

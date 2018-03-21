@@ -2,10 +2,15 @@
 #include <iostream>
 #include <ctype.h>
 #include <string>
+#include "lexer.cpp"
 
 #ifndef PARSER_H
 #define PARSER_H
 class Parser {
+public:
+  Parser();
+private:
+  Lexer lex;
   void RAT18S();
   void OptFunctionDefinitions();
   void OptDeclarationList();
