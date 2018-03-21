@@ -1,0 +1,95 @@
+#LEFT RECURSION
+
+Left recursion in the grammar is the recursive expansion of the grammar from the leftmost part of the production that makes it diificult to guess the starting terminal of the sentence to be derived from the productions of grammars.
+
+Basically when the left hand side non terminal appears on the left most part of the production's right hand side then this results in left recursion.
+
+Left recursion is of the form as shown below
+
+A ::= A b | A d | A f | ................ | C
+
+now on deriving a string from this prodcution, A will be recursively expanded to give another A resulting in left recursion.
+
+For each left recursive production of the grammar of the form as shown above, we write a right recursive production in the following way
+
+A ::= A b | C
+
+now becomes
+
+A ::= C A'
+
+A' ::= b A' | e
+
+and for multiple left hand side derivation in the same production of the form
+
+A ::= A b | Ad | C
+
+now becomes
+
+A ::= C A'
+
+A' ::= b A' | d A' | e
+
+here A' is another non-terminal taken to get rid of the left recusrion and 'e' is the empty symbol.
+
+#QUESTION
+
+Now coming to your question, we can see that not all the productions of the given grammar are left - recursive in nature.
+
+First we have to identify which are the left-recursive productions.
+
+R25. <Expression> ::=    <Expression> + <Term>   | <Expression> - <Term>    |    <Term>
+
+R26. <Term>    ::=      <Term> * <Factor>     |   <Term> / <Factor>    |    <Factor>
+
+These are the two productions which are left recursive in nature .
+
+REMOVING LEFT RECURSION
+
+R25. <Expression> ::=    <Expression> + <Term>   | <Expression> - <Term>    |    <Term>
+
+In this production we can see that non terminal <Expression> is left recursively expanded.
+
+Comapring this production to the form of left-recursion production
+
+A ::= A b | Ad | C
+
+here A is <Expression> , b is + <Term>, d is - <Term>, C is <Term>
+
+so equivalent no-left recursive form will be
+
+A ::= C A'
+
+A' ::= b A' | d A' | e
+
+that is
+
+<Expression> ::=    <Term> <Expression'>
+
+<Expression'> ::=     + <Term> <Expression'>  |   - <Term>   <Expression'> | e
+
+where <Expression'> is the new non terminal taken to make the production non -left recusrive
+
+R26. <Term>    ::=      <Term> * <Factor>     |   <Term> / <Factor>    |    <Factor>
+
+This production is same as the previous production, we have this production in the form as shown below
+
+A ::= A b | Ad | C
+
+where A is <Term>, b is * <Factor> , d is / <Factor>, C is <Factor>
+
+the equiavlent non-left recursive form will be
+
+A ::= C A'
+
+A' ::= b A' | d A' | e
+
+so equiavlent non-left recursive production is
+
+<Term>    ::= <Factor> <Term'>
+
+<Term'>    ::=      * <Factor>   <Term'>    |   / <Factor>   <Term'>    | e
+
+where <Term'> is the new non terminal taken to make the production non-left recusrive
+
+so apart from these two productions , all the productions in the grammar will remain same. Just replace the R25 and R26 productions with the above equivalent non-left recursive productions.
