@@ -1,13 +1,17 @@
 #include "lexer.h"
 
+Lexer::Lexer() {
+    if ((in_fp = std::fopen("/Users/QuestCode/Desktop/Compiler_Project/Compiler_Project/sample.RAT18S", "r")) == NULL)
+        printf("ERROR - cannot open sample.RAT18S \n");
+}
 void Lexer::checkFile() {
-  if ((in_fp = std::fopen("sample.RAT18S", "r")) == NULL)
+  if (in_fp == NULL)
 	printf("ERROR - cannot open sample.RAT18S \n");
 	else {
-	    getCharacter();
+            getCharacter();
     	do {
     	   lexer();
-    	} while (nextToken != EOF);
+    	} while (nextToken != END_OF_FILE);
 	}
 }
 
@@ -23,18 +27,18 @@ void Lexer::addCharacter() {
 void Lexer::getCharacter() {
   if ((nextCharacter = getc(in_fp)) != EOF) {
     if (isalpha(nextCharacter))
-      characterClass = LETTER;
+        characterClass = Character::LETTER;
     else if (isdigit(nextCharacter))
-      characterClass = DIGIT;
+      characterClass = Character::DIGIT;
 		else if (nextCharacter == '$')
-			characterClass = DOLLAR_SIGN;
+			characterClass = Character::DOLLAR_SIGN;
 		else if (nextCharacter == '.')
-			characterClass = PERIOD;
+			characterClass = Character::PERIOD;
     else if (nextCharacter == '!')
-  			characterClass = COMMENT;
-    else characterClass = UNKNOWN;
+  			characterClass = Character::COMMENT;
+    else characterClass = Character::UNKNOWN;
   } else {
-      characterClass = EOF;
+      characterClass = Character::E_O_F;
   }
 }
 
@@ -43,35 +47,33 @@ void Lexer::getNonBlank() {
     getCharacter();
 }
 
-int Lexer::lexer() {
+Token Lexer::lexer() {
   lexemeLength = 0;
   getNonBlank();
   switch (characterClass) {
     /* Parse identifiers */
     case LETTER:
-      addCharacter();
-      getCharacter();
+          addCharacter();
+          getCharacter();
 
-			if (!isspace(nextCharacter)) {
-				while (characterClass == LETTER || characterClass == DIGIT) {
-	          addCharacter();
-	          getCharacter();
-            // Check if next character is either a digit or letter
-            if (characterClass == LETTER) {
-              nextToken = IDENT;
-            } else if (characterClass == DIGIT) {
-              nextToken = DIGIT;
-            }
-	      }
+          if (!isspace(nextCharacter)) {
+              while (characterClass == LETTER || characterClass == DIGIT) {
+                  addCharacter();
+                  getCharacter();
+                // Check if next character is either a digit or letter
+                if (characterClass == LETTER) {
+                    nextToken = Token::IDENT;
+                } else if (characterClass == DIGIT) {
+                    nextToken = Token::IDENT;
+                }
+          }
 
-				if (characterClass == LETTER || characterClass == DOLLAR_SIGN) {
-						addCharacter();
-						getCharacter();
-            nextToken = IDENT;
-				}
-			} else {
-        nextToken = IDENT;
-      }
+              if (characterClass == LETTER || characterClass == DOLLAR_SIGN) {
+                    addCharacter();
+                    getCharacter();
+                    nextToken = Token::IDENT;
+              }
+          } else { nextToken = Token::IDENT; }
 
       break;
     /* Parse integer literals */
@@ -83,26 +85,24 @@ int Lexer::lexer() {
         getCharacter();
       }
 
-			if (characterClass == PERIOD) {
-				addCharacter();
-        getCharacter();
-				while (characterClass == DIGIT) {
-	        addCharacter();
-	        getCharacter();
-          nextToken = REAL_LIT;
-	      }
-			} else {
-				nextToken = INT_LIT;
-			}
+        if (characterClass == PERIOD) {
+            addCharacter();
+            getCharacter();
+            while (characterClass == DIGIT) {
+                addCharacter();
+                getCharacter();
+                nextToken = Token::REAL_LIT;
+            }
+        } else { nextToken = Token::INT_LIT; }
       break;
+      case DOLLAR_SIGN:
+          break;
+      case PERIOD:
+          break;
       case COMMENT:
-        addCharacter();
-        getCharacter();
-
-        if (nextCharacter == '=') {
-            nextToken = EOF;
-        } else {
-          nextToken = COM;
+          addCharacter();
+          getCharacter();
+          
           while (characterClass != COMMENT) {
               // printf("%c\n", nextCharacter);
               addCharacter();
@@ -110,8 +110,7 @@ int Lexer::lexer() {
           }
           addCharacter();
           getCharacter();
-        }
-
+          nextToken = Token::COM;
 
       break;
       /* Parentheses and operators */
@@ -120,15 +119,15 @@ int Lexer::lexer() {
       getCharacter();
       break;
       /* EOF */
-      case EOF:
-        nextToken = EOF;
+      case E_O_F:
+          nextToken = Token::END_OF_FILE;
       break;
     } /* End of switch */
-    printResult(nextToken);
+//    printResult(nextToken);
     return nextToken;
 }
 
-int Lexer::lookup(char ch) {
+Token Lexer::lookup(char ch) {
   switch (ch) {
 		case '[':
 			addCharacter();
@@ -170,16 +169,16 @@ int Lexer::lookup(char ch) {
             }
 		break;
 		case '(':
-  		addCharacter();
-  		nextToken = LEFT_PAREN;
+            addCharacter();
+            nextToken = LEFT_PAREN;
 		break;
 		case ')':
-  		addCharacter();
-  		nextToken = RIGHT_PAREN;
+            addCharacter();
+            nextToken = RIGHT_PAREN;
 		break;
       case '^':
           addCharacter();
-          nextToken = EOF;
+          nextToken = END_OF_FILE;
           getCharacter();
           if (nextCharacter == '=') {
               addCharacter();
@@ -196,11 +195,11 @@ int Lexer::lookup(char ch) {
 		break;
       case ':':
     		addCharacter();
-    		nextToken = COLON_OP;
+    		nextToken = COLON;
 		  break;
       case ';':
     		addCharacter();
-    		nextToken = SEMICOLON_OP;
+    		nextToken = SEMICOLON;
 		  break;
       case '{':
     		addCharacter();
@@ -215,21 +214,21 @@ int Lexer::lookup(char ch) {
             getCharacter();
             if (nextCharacter == '%') {
               addCharacter();
-              nextToken = PERCENT_OP;
+              nextToken = PERCENT;
             }
 		  break;
       case ',':
     		addCharacter();
-    		nextToken = COMMA_OP;
+    		nextToken = COMMA;
 		  break;
 		default:
-			nextToken = EOF;
+			nextToken = END_OF_FILE;
 		break;
 	}
 	return nextToken;
 }
 
-void Lexer::printResult(int token) {
+void Lexer::printResult(Token token) {
   std::string id[] = {"identifier","keyword", "integer", "real","separator","operator","comment","boolean"};
   std::string keywords[] = {"if","else","endif","while","return","get","put","function","int","boolean","real"};
 
@@ -256,8 +255,10 @@ void Lexer::printResult(int token) {
     case COM:
       printf("%s\t\t%s\n", id[6].c_str(),lexeme);
     break;
-    case COLON_OP:
-    case SEMICOLON_OP:
+    case PERCENT:
+    case COMMA:
+    case COLON:
+    case SEMICOLON:
     case LEFT_BLOCK:
     case LEFT_PAREN:
     case RIGHT_BLOCK:
@@ -273,9 +274,6 @@ void Lexer::printResult(int token) {
     case EQ_OP:
     case LT_OP:
     case GT_OP:
-    case PERCENT_OP:
-    case COMMENT_OP:
-    case COMMA_OP:
     case UP_EQ_OP:
     case EQ_LT_OP:
     case EQ_GT_OP:
@@ -283,7 +281,7 @@ void Lexer::printResult(int token) {
       /* operators tokens code */
       printf("%s\t%s\n", id[5].c_str(),lexeme);
     break;
-    case EOF:
+    case END_OF_FILE:
     break;
     default:
       printf("UNKNOWN\t\t%s\n",lexeme);
