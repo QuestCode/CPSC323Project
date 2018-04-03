@@ -1,7 +1,7 @@
 #include "lexer.h"
 
 Lexer::Lexer() {
-    if ((in_fp = std::fopen("/Users/QuestCode/Desktop/Compiler_Project/Compiler_Project/sample.RAT18S", "r")) == NULL)
+    if ((in_fp = std::fopen("sample.RAT18S", "r")) == NULL)
         printf("ERROR - cannot open sample.RAT18S \n");
 }
 void Lexer::checkFile() {
@@ -52,7 +52,7 @@ Token Lexer::lexer() {
   getNonBlank();
   switch (characterClass) {
     /* Parse identifiers */
-    case LETTER:
+      case LETTER: {
           addCharacter();
           getCharacter();
 
@@ -74,8 +74,26 @@ Token Lexer::lexer() {
                     nextToken = Token::IDENT;
               }
           } else { nextToken = Token::IDENT; }
+          
+          std::string lexString = lexeme;
+          
+          if (lexString == "true") {
+              nextToken = TRUE_OP;
+          } else if (lexString == "false") {
+              nextToken = FALSE_OP;
+          }
+          
+          // Check if there is a keyword match
+          std::string keywords[] = {"if","else","endif","while","return","get","put","function","int","boolean","real"};
+          
+          for (auto key: keywords) {
+              if (key == lexeme) {
+                  nextToken = KEYWORD;
+              }
+          }
 
       break;
+      }
     /* Parse integer literals */
     case DIGIT:
       addCharacter();
@@ -234,11 +252,6 @@ void Lexer::printResult(Token token) {
 
   switch (token) {
     case IDENT:
-      for (auto key: keywords) {
-          if (key == lexeme) {
-            nextToken = KEYWORD;
-          }
-      }
 
       if(nextToken != KEYWORD) {
           printf("%s\t%s\n", id[0].c_str(),lexeme);
