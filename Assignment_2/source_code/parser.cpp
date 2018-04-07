@@ -71,13 +71,11 @@ void Parser::RAT18S() {
     printf("\t<Rat18S> ::= <Opt Function Definitions> %%  <Opt Declaration List>  <Statement List>\n");
     token = lex.lexer();
     token = nonComment();
-    printToken(token, lex.getLexeme());
     OptFunctionDefinitions();
-    printToken(token, lex.getLexeme());
     if (token == PERCENT) {
+        printToken(token, lex.getLexeme());
         token = lex.lexer();
         token = nonComment();
-        printToken(token, lex.getLexeme());
         OptDeclarationList();
         StatementList();
     }
@@ -99,11 +97,11 @@ void Parser::FunctionDefinitions() {
 }
 
 void Parser::FunctionDefinitionsPrime() {
+    printf("\t<Function Definitions Prime>  ::= <Function Definitions> | ɛ\n");
     string lexeme = lex.getLexeme();
     if (token == RIGHT_CURLY_BRACE) {
-        printf("\t<Function Definitions Prime>  ::= <Function>\n");
+        printf("\t<Function Definitions Prime>  ::= <Function Definitions>\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
         FunctionDefinitions();
     } else {
         printf("\t<Function Definitions Prime>  ::= ɛ\n");
@@ -113,19 +111,18 @@ void Parser::FunctionDefinitionsPrime() {
 void Parser::Function() {
     string lexeme = lex.getLexeme();
     if ( lexeme == "function" ) {
+        printToken(token, lex.getLexeme());
         printf("\t<Function> ::= function <Identifier> [ <Opt Parameter List> ] <Opt Declaration List> <Body>\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
         if (token == IDENT) {
-            token = lex.lexer();
             printToken(token, lex.getLexeme());
+            token = lex.lexer();
             if (token == LEFT_BLOCK) {
-                token = lex.lexer();
                 printToken(token, lex.getLexeme());
+                token = lex.lexer();
                 OptParameterList();
                 if (token == RIGHT_BLOCK) {
                     token = lex.lexer();
-                    printToken(token, lex.getLexeme());
                     OptDeclarationList();
                     Body();
                 }
@@ -151,7 +148,6 @@ void Parser::ParameterListPrime() {
     if (token == COMMA) {
         printf("\t<Parameter List Prime>  ::=  , <Parameter List>\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
         ParameterList();
     } else {
         printf("\t<Parameter List Prime>  ::= ɛ\n");
@@ -162,11 +158,11 @@ void Parser::ParameterListPrime() {
 void Parser::Parameter() {
     printf("\t<Parameter> ::= <IDs> : <Qualifier>\n");
     if (token == IDENT) {
-      token = lex.lexer();
+        printToken(token, lex.getLexeme());
+        token = lex.lexer();
         printToken(token, lex.getLexeme());
       if (token == COLON) {
           token = lex.lexer();
-          printToken(token, lex.getLexeme());
           Qualifier();
       } else {
         printf("ERROR*---* No Colon found\n");
@@ -179,17 +175,17 @@ void Parser::Parameter() {
 void Parser::Qualifier() {
     string lexeme = lex.getLexeme();
     if (lexeme == "int") {
+        printToken(token, lex.getLexeme());
         printf("\t<Qualifier> ::= int\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
     } else if (lexeme == "real") {
+        printToken(token, lex.getLexeme());
         printf("\t<Qualifier> ::= real\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
     } else if (lexeme == "boolean") {
+        printToken(token, lex.getLexeme());
         printf("\t<Qualifier> ::= boolean\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
     } else {
 //        printf("ERROR*---* No Quantifier found\n");
     }
@@ -220,6 +216,7 @@ void Parser::DeclarationList() {
     printf("\t<Declaration List>  := <Declaration> ; <Declaration List Prime>\n");
     Declaration();
     if (token == SEMICOLON) {
+        printToken(token, lex.getLexeme());
         token = lex.lexer();
         token = nonComment();
         printToken(token, lex.getLexeme());
@@ -241,17 +238,17 @@ void Parser::Declaration() {
 void Parser::IDs() {
     printf("\t<IDs> ::= <Identifier> <IDs Prime>\n");
     if (token == IDENT) {
-        token = lex.lexer();
         printToken(token, lex.getLexeme());
+        token = lex.lexer();
         IDsPrime();
     }
 }
 
 void Parser::IDsPrime() {
     if (token == COMMA) {
+        printToken(token, lex.getLexeme());
         printf("\t<IDs> ::= , <IDs>\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
         IDs();
     } else {
         printf("\t<IDs> ::= , ɛ\n");
@@ -260,7 +257,7 @@ void Parser::IDsPrime() {
 
 
 void Parser::StatementList() {
-    printf("\t<Statement List> ::= <Statement><Statement List Prime>\n");
+    printf("\t<Statement List> ::= <Statement> <Statement List Prime>\n");
     token = nonComment();
     Statement();
     StatementListPrime();
@@ -382,7 +379,6 @@ void Parser::Scan() {
     if( token == LEFT_PAREN ) {
         printf("\t<Scan> ::= get ( <IDs> );\n");
         token = lex.lexer();
-        printToken(token, lex.getLexeme());
         IDs();
         if (token == RIGHT_PAREN) {
             token = lex.lexer();
@@ -534,7 +530,6 @@ void Parser::Primary() {
             if( token == LEFT_PAREN ) {
                 printf("\t<Primary> ::= <Identifier> ( <IDs> )\n");
                 token = lex.lexer();
-                printToken(token, lex.getLexeme());
                 IDs();
                 if (token == RIGHT_PAREN) {
                     token = lex.lexer();
