@@ -1,0 +1,29 @@
+----------- Symbol Table -----------
+Identifier     Memory Location     Type      
+low                 2000           int            
+high                2001           int            
+step$               2002           int            
+low                 2003           int            
+high                2004           int            
+step$               2005           int            
+
+
+--------- Instruction Table ---------
+1.   STDIN     nil            
+2.   LABEL     nil            
+3.   PUSHM     2000           
+4.   PUSHM     2001           
+5.   LES       nil            
+6.   JUMPZ     nil            
+7.   PUSHM     2000           
+8.   STDOUT    nil            
+9.   PUSHM     2000           
+10.  PUSHM     2002           
+11.  ADD       nil            
+12.  POPM      2000           
+13.  PUSHM     2000           
+14.  NEQ       nil            
+15.  JUMPZ     19             
+16.  PUSHM     2000           
+17.  STDOUT    nil            
+18.  JUMP      2              

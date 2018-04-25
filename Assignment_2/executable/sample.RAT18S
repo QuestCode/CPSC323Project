@@ -1,20 +1,25 @@
 ! this is comment for this sample code which
    converts  Fahrenheit into Celcius !
 
-function convert$ [fahr:int] {
-           return 5 * (fahr -32) / 9;
-}
+   function convertx []
+   {
 
-%%
-!main!
-     int    low,  high, step$;      ! declarations !
+       if (x > y)
+          x = false;
+       endif
+       if ( y ^= z)
+          x = true;
+       else y = 8;
+       endif
+       return;
+   }
 
-     get (low, high, step$);
-     while (low  <  high )
-         {  put (low);
-             put (convert$ (low));
-             low =  low  +  step$;
-            if (low ^= 10) {
-            put (low);
-            } endif
-         }
+
+   %%
+        int    low, high, step;
+
+        get (low, high, step);
+        while (low <= high)
+           {  put (convert(low) );
+              low = low + step;
+           }

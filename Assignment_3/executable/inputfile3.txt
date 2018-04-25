@@ -1,0 +1,12 @@
+%%
+int a,b; !declarations!
+boolean val;
+int omg;
+
+val = false;
+
+omg = 5;
+while ( omg > 3 ) {
+    put ( omg );
+    omg = omg - 1;
+}

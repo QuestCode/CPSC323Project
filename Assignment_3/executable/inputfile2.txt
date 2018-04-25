@@ -1,0 +1,11 @@
+%%
+int    low,  high, step$;      
+
+     get (low, high, step$);
+     while (low  <  high )
+         {  put (low);
+             low =  low  +  step$;
+            if (low ^= 10) {
+            put (low);
+            } endif
+         }

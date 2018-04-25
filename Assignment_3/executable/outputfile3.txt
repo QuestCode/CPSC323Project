@@ -1,0 +1,22 @@
+----------- Symbol Table -----------
+Identifier     Memory Location     Type      
+a                   2000           int            
+b                   2001           int            
+val                 2002           boolean        
+omg                 2003           int            
+
+
+--------- Instruction Table ---------
+1.   PUSHI     0              
+2.   POPM      2002           
+3.   POPM      2003           
+4.   LABEL     nil            
+5.   PUSHM     2003           
+6.   GRT       nil            
+7.   JUMPZ     14             
+8.   PUSHM     2003           
+9.   STDOUT    nil            
+10.  PUSHM     2003           
+11.  SUB       nil            
+12.  POPM      2003           
+13.  JUMP      4              

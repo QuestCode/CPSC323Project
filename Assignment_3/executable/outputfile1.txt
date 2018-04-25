@@ -1,0 +1,8 @@
+----------- Symbol Table -----------
+Identifier     Memory Location     Type      
+alb                 2000           int            
+bat                 2001           int            
+cab                 2002           int            
+isConverted         2003           boolean        
+
+
