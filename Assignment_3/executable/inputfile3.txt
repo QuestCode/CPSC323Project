@@ -7,6 +7,8 @@ val = false;
 
 omg = 5;
 while ( omg > 3 ) {
-    put ( omg );
+    if ( val ^= true )
+	a = 4;
+    endif
     omg = omg - 1;
 }

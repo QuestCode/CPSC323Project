@@ -1,3 +1,9 @@
+//
+//  Assembly.h
+//  Compilers CPSC 323
+//
+
+
 
 int memory_address = 2000; // Global starting address variable
 Token save; // For instruction generation
@@ -42,7 +48,7 @@ stack<int> jumpstack; // Stack for back patching jump instructions
 int get_address(Token token) { // Checks symbol table for given id and returns address
     string x = token.lexeme;
     if (SymbolTable.size() == 0) {
-        lastfout << "Error: Symbol Table is empty" << endl;
+        fout << "Error: Symbol Table is empty" << endl;
         system("pause");
         exit(1);
     }
@@ -52,30 +58,30 @@ int get_address(Token token) { // Checks symbol table for given id and returns a
         }
     }
     // If it reaches below code, id was not found in table
-    lastfout << "Error: an identifier was not declared." << endl << "Functions in source can cause this problem  because they are not supported!\n" << endl;
+    fout << "Error: an identifier was not declared." << endl << "Functions in source can cause this problem  because they are not supported!\n" << endl;
     system("pause");
     exit(1);
 }
 
 void printST() { // Prints all stored symbols in symbol table
     if (SymbolTable.size() == 0) return;
-    lastfout << "----------- Symbol Table -----------" << endl;
-    lastfout << left << setw(15) << "Identifier" << left << setw(20) << "Memory Location" << left << setw(10) << "Type" << endl;
+    fout << "----------- Symbol Table -----------" << endl;
+    fout << left << setw(15) << "Identifier" << left << setw(20) << "Memory Location" << left << setw(10) << "Type" << endl;
     for (int i = 0; i < SymbolTable.size(); i++) {
-        lastfout << left << setw(20) << SymbolTable[i].identifier << left << setw(15) << SymbolTable[i].memLocation << left << setw(15) << SymbolTable[i].type << endl;
+        fout << left << setw(20) << SymbolTable[i].identifier << left << setw(15) << SymbolTable[i].memLocation << left << setw(15) << SymbolTable[i].type << endl;
     }
 }
 
 void printIT() { // Prints all stored instructions in instr table
     if (InstructionTable.size() == 0) return;
-    lastfout << "--------- Instruction Table ---------" << endl;
+    fout << "--------- Instruction Table ---------" << endl;
     for (int i = 0; i < InstructionTable.size(); i++) {
         string index = to_string(i + 1) + ".";
-        lastfout << left << setw(5) << index << left << setw(10) << InstructionTable[i].Op << left << setw(15);
+        fout << left << setw(5) << index << left << setw(10) << InstructionTable[i].Op << left << setw(15);
         if (InstructionTable[i].operand == -1)
-        lastfout << "nil" << endl;
+        fout << "nil" << endl;
         else
-        lastfout << InstructionTable[i].operand << endl;
+        fout << InstructionTable[i].operand << endl;
     }
 }
 

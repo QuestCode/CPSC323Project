@@ -1,10 +1,10 @@
 //
-//  lexer.h
-//  Compiler
+//  Lexer.h
+//  Compilers CPSC 323
 //
 
-#ifndef lexer_h
-#define lexer_h
+#ifndef LEXER_H
+#define LEXER_H
 #define SEPARATOR_SIZE 9
 #define OPERATER_SIZE 7
 #define RELOP_SIZE 4
@@ -19,7 +19,6 @@ using namespace std;
 
 ifstream fin;
 ofstream fout;
-ofstream lastfout;
 
 struct Token {
     string token;
@@ -299,4 +298,4 @@ vector<Token> Lexer::lexical(string curr_line, int &lineNum) {
     return tokens;
 }
 
-#endif /* lexer_h */
+#endif /* LEXER_H */

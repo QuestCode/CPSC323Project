@@ -18,7 +18,7 @@ int main() {
         string inputFile = "inputfile"+ to_string(i) + ".txt";
         string outputFile = "outputfile"+ to_string(i) + ".txt";
         fin.open(inputFile);
-        lastfout.open(outputFile);
+        fout.open(outputFile);
 
         if (!fin) {
             cout << "Error. Unable to read file." << endl;
@@ -40,14 +40,15 @@ int main() {
         fin.close();
         parse.Rat18S();
         printST();
-        lastfout << "\n\n";
+        fout << "\n\n";
         printIT();
-        lastfout.close();
+        fout.close();
         SymbolTable.clear();
         InstructionTable.clear();
         memory_address = 2000; // Global starting address variable
         stdinflag = false;
         cout << "Completed " + inputFile +"\n";
+        cout << "You can now open " + outputFile + "!\n";
     }
     
     

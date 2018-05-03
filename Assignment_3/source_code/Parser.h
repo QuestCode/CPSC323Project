@@ -1,18 +1,20 @@
 //
 //  Parser.h
-//  Compiler
+//  Compilers CPSC 323
 //
 
-#ifndef Parser_h
-#define Parser_h
+#ifndef PARSER_H
+#define PARSER_H
 
 #include <iostream>
 #include <iomanip>
-#include "lexer.h"
-#include "assembly.h"
+
+// IMPORT LEXER AND ASSEMBLY CLASSES
+#include "Lexer.h"
+#include "Assembly.h"
 
 #define ERROR_FOUND << currentToken.lexeme << "' on line " << currentToken.linenum; exit(1);
-#define ADVANCE_AND_PRINT if (tokenCounter < tokenList.size()) { currentToken = tokenList[tokenCounter]; if (printSwitch) { fout << "\nToken: " << left << setw(20) << currentToken.token << left << setw(8) << "Lexeme: " << left << setw(20) << currentToken.lexeme << endl; } tokenCounter++; }
+#define ADVANCE if (tokenCounter < tokenList.size()) { currentToken = tokenList[tokenCounter]; tokenCounter++; }
 
 class Parser {
     void OptFuncDef();
@@ -61,31 +63,25 @@ string symboltype; //for adding symbols to table
 
 void Parser::Rat18S() {
     
-    ADVANCE_AND_PRINT
+    ADVANCE
     
-    if (printSwitch) {
-        fout << "\t<Rat18S> ::= <Opt Function Definitions>\n\t\t\t\t %% <Opt Declaration List> <Statement List> \n";
-    }
+    
     
     OptFuncDef();
     
     if (currentToken.lexeme == "%%") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         OptDecList();
         StatementList();
-        fout << "Finished" << endl;
     }
     else {
-        fout << "\nSyntax Error, expecting this %% before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting this %% before '" ERROR_FOUND
     }
 }
 
 
 void Parser::OptFuncDef() {
     
-    if (printSwitch) {
-        fout << "\t<Opt Function Definition> ::= <Function Definitions> | <Empty>\n";
-    }
     
     /*                                      *
      *      FUNCTION DEFINITIONS REMOVE     *
@@ -95,16 +91,13 @@ void Parser::OptFuncDef() {
         Empty();
     }
     else {
-        fout << "\nSyntax Error, expecting 'function' or '%%' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting 'function' or '%%' before '" ERROR_FOUND
     }
     
 }
 
 void Parser::FuncDef() {
     
-    if (printSwitch) {
-        fout << "\t<Function Definitions> ::= <Function> | <Function> <Function Definitions>\n";
-    }
     while (currentToken.lexeme == "function") {
         Func();
     }
@@ -112,38 +105,33 @@ void Parser::FuncDef() {
 
 void Parser::Func() {
 
-    if (printSwitch) {
-        fout << "\t<Function> ::= function <Identifier> [ <Opt Paramenter List> ] <Opt Declaration List> <fout>\n";
-    }
-    ADVANCE_AND_PRINT
+    ADVANCE
     
     if (currentToken.token == "Identifier") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == "[") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             OptParamList();
             if (currentToken.lexeme == "]") {
-                ADVANCE_AND_PRINT
+                ADVANCE
                 OptDecList();
                 Body();
             }
             else {
-                fout << "\nSyntax Error, expecting ']' before '" ERROR_FOUND
+                cout << "\nSyntax Error, expecting ']' before '" ERROR_FOUND
             }
         }
         else {
-            fout << "\nSyntax Error, expecting '[' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting '[' before '" ERROR_FOUND
         }
     }
     else {
-        fout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
     }
 }
 
 void Parser::OptParamList() {
  
-    if (printSwitch)
-        fout << "\t<Opt Parameter List> ::= <Parameter List> | <Empty>\n";
     
     if (currentToken.token == "Identifier") {
         ParamList();
@@ -152,37 +140,30 @@ void Parser::OptParamList() {
         Empty();
     }
     else {
-        fout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
     }
 }
 
 void Parser::ParamList() {
-  
-    if (printSwitch)
-        fout << "\t<Parameter List> ::= <Parameter> | <Parameter>, <Parameter List>\n";
-    
     
     if (currentToken.token == "Identifier") {
         Parameter();
         if (currentToken.lexeme == ",") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             ParamList();
         }
     }
 }
 
 void Parser::Parameter() {
-    
-    if (printSwitch)
-        fout << "\t<Parameter> ::= <IDs> : <Qualifier>\n";
-    
+   
     IDs();
     if (currentToken.lexeme == ":") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Qualifier();
     }
     else {
-        fout << "\nSyntax Error, expecting ':' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting ':' before '" ERROR_FOUND
     }
 }
 
@@ -192,33 +173,27 @@ void Parser::Qualifier() {
      *          real type REMOVE            *
      *                                      */
     
-    if (printSwitch)
-        fout << "\t<Qualifier> ::= int | boolean \n";
-    
     if (currentToken.lexeme == "int" || currentToken.lexeme == "true"
         || currentToken.lexeme == "false" || currentToken.lexeme == "boolean") {
         symboltype = currentToken.lexeme;
-        ADVANCE_AND_PRINT
+        ADVANCE
     } else {
-        fout << "\nSyntax Error, expecting 'int' or 'boolean' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting 'int' or 'boolean' before '" ERROR_FOUND
     }
 }
 
 void Parser::Body() {
     
-    if (printSwitch)
-        fout << "\t<fout> ::= { <Statement List> }\n";
-    
     if (currentToken.lexeme == "{") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         StatementList();
         if (currentToken.lexeme == "}") {
-            ADVANCE_AND_PRINT
+            ADVANCE
         } else {
-            fout << "\nSyntax Error, expecting '}' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting '}' before '" ERROR_FOUND
         }
     } else {
-        fout << "\nSyntax Error, expecting '{' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '{' before '" ERROR_FOUND
     }
 }
 
@@ -228,18 +203,12 @@ void Parser::OptDecList() {
      *             real type REMOVE         *
      *                                      */
     
-    if (printSwitch) {
-        fout << "\t<Opt Declaration List> ::= <Declaration List> | <Empty>\n";
-    }
-    
     if (currentToken.lexeme == "{") {
         Empty();
-    }
-    else if (currentToken.lexeme == "int" || currentToken.lexeme == "boolean") {
+    } else if (currentToken.lexeme == "int" || currentToken.lexeme == "boolean") {
         DecList();
-    }
-    else {
-        fout << "\nSyntax Error, expecting 'int' or 'boolean' before '" ERROR_FOUND
+    } else {
+        cout << "\nSyntax Error, expecting 'int' or 'boolean' before '" ERROR_FOUND
     }
 }
 
@@ -249,58 +218,44 @@ void Parser::DecList() {
      *             real type REMOVE         *
      *                                      */
     
-    if (printSwitch) {
-        fout << "\t<Declaration List> ::= <Declaration>; | <Declaration> ; <Declaration List>\n";
-    }
-    
     Declaration();
     if (currentToken.lexeme == ";") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == "int" || currentToken.lexeme == "boolean") {
             DecList();
         }
     }
     else {
-        fout << "\nSyntax Error, expecting ';' on line " ERROR_FOUND
+        cout << "\nSyntax Error, expecting ';' on line " ERROR_FOUND
     }
 }
 
 void Parser::Declaration() {
-    
-    if (printSwitch)
-        fout << "\t<Declaration> ::= <Qualifier> <IDs>\n";
-    
     Qualifier();
     IDs();
 }
 
 void Parser::IDs() {
     
-    if (printSwitch) {
-        fout << "\t<IDs> ::= <Identifier> | <Identifier>, <IDs>\n";
-    }
     if (currentToken.token == "Identifier") {
         add_symbol(currentToken.lexeme, memory_address, symboltype);
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == ",") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             IDs();
         } else if (currentToken.token == "Identifier") {
-            fout << "\nSyntax Error, expecting ',' between multiple identifiers on line " << currentToken.linenum;
+            cout << "\nSyntax Error, expecting ',' between multiple identifiers on line " << currentToken.linenum;
             exit(1);
         }
     }
     else {
-        fout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting <Identifier> before '" ERROR_FOUND
     }
 }
 
 void Parser::StatementList() {
     
-    if (printSwitch) {
-        fout << "\t<Statement List> ::= <Statement> | <Statement> <Statement List>\n";
-    }
-    while (currentToken.lexeme == "if" || currentToken.lexeme == "return" || currentToken.lexeme == "put"
+   while (currentToken.lexeme == "if" || currentToken.lexeme == "return" || currentToken.lexeme == "put"
            || currentToken.lexeme == "get" || currentToken.lexeme == "while" || currentToken.token == "Identifier"
            || currentToken.lexeme == "function") {
         Statement();
@@ -308,9 +263,6 @@ void Parser::StatementList() {
 }
 
 void Parser::Statement() {
-    
-    if (printSwitch)
-        fout << "\t<Statement> ::= <Compound> | <Assign> | <If> | <Return> | <Print> | <Scan> | <While>\n";
     
     if (currentToken.lexeme == "{")
         Compound();
@@ -329,86 +281,78 @@ void Parser::Statement() {
     else if (currentToken.lexeme == "while")
         While();
     else {
-        fout << "\nSyntax Error, expecting proper '<Statement>' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting proper '<Statement>' before '" ERROR_FOUND
     }
 }
 
 void Parser::Compound() {
     
-    if (printSwitch)
-        fout << "\t<Compound> ::= {<Statement List>}\n";
-    
     if (currentToken.lexeme == "{") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         StatementList();
         if (currentToken.lexeme == "}") {
-            ADVANCE_AND_PRINT
+            ADVANCE
         }
     }
 }
 
 void Parser::Assign() {
-    
-    if (printSwitch)
-        fout << "\t<Assign> ::= <Identifier> = <Expression>;\n";
-    
+
     if (currentToken.token == "Identifier") {
         save = currentToken;
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == "=") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             Expression();
             add_instr("POPM", get_address(save));
             if (currentToken.lexeme == ";") {
-                ADVANCE_AND_PRINT
+                ADVANCE
             } else {
-                fout << "\n<Assign> Syntax Error";
+                cout << "\n<Assign> Syntax Error";
                 exit(1);
             }
         } else {
-            fout << "\nSyntax Error, expecting '=' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting '=' before '" ERROR_FOUND
         }
     }
 }
 
 void Parser::If() {
     
-    if (printSwitch)
-        fout << "\t<If> ::= if (<Condition>) <Statement> endif | if (<Condition>) <Statement> else <Statement> endif\n";
     if (currentToken.lexeme == "if") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == "(") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             Condition();
             if (currentToken.lexeme == ")") {
-                ADVANCE_AND_PRINT
+                ADVANCE
                 Statement();
                 if (currentToken.lexeme == "endif") {
-                    ADVANCE_AND_PRINT
+                    ADVANCE
                 }
                 else if (currentToken.lexeme == "else") {
-                    ADVANCE_AND_PRINT
+                    ADVANCE
                     Statement();
                     if (currentToken.lexeme == "endif") {
-                        ADVANCE_AND_PRINT
+                        ADVANCE
                     }
                     else {
-                        fout << "\nSyntax Error, expecting 'endif' on line " << currentToken.linenum;
+                        cout << "\nSyntax Error, expecting 'endif' on line " << currentToken.linenum;
                         exit(1);
                     }
                 }
                 else {
-                    fout << "\nSyntax Error, expecting 'endif' or 'else' on line " << currentToken.linenum;
+                    cout << "\nSyntax Error, expecting 'endif' or 'else' on line " << currentToken.linenum;
                     exit(1);
                 }
             }
             else {
-                fout << "\nSyntax Error, expecting ) after <Condition> on line " << currentToken.linenum;
+                cout << "\nSyntax Error, expecting ) after <Condition> on line " << currentToken.linenum;
                 exit(1);
             }
         }
         else {
-            fout << "\nSyntax Error, expecting ( on line " << currentToken.linenum;
+            cout << "\nSyntax Error, expecting ( on line " << currentToken.linenum;
             exit(1);
         }
     }
@@ -416,101 +360,86 @@ void Parser::If() {
 
 void Parser::Return() {
     
-    if (printSwitch)
-        fout << "\t<Return> ::= return; | return <Expression>;\n";
-    
-    ADVANCE_AND_PRINT
+    ADVANCE
     if (currentToken.lexeme == ";") {
-        ADVANCE_AND_PRINT
+        ADVANCE
     } else {
         Expression();
         if (currentToken.lexeme == ";") {
-            ADVANCE_AND_PRINT
+            ADVANCE
         } else {
-            fout << "\nSyntax Error, expecting ';' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting ';' before '" ERROR_FOUND
         }
     }
 }
 
 void Parser::Print() {
-    
-    if (printSwitch)
-        fout << "\t<Print> ::= print (<Expressions>);\n";
-    
-    ADVANCE_AND_PRINT
+
+    ADVANCE
     if (currentToken.lexeme == "(") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Expression();
         add_instr("STDOUT", -1); // INSTR;
         if (currentToken.lexeme == ")") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             if (currentToken.lexeme == ";") {
-                ADVANCE_AND_PRINT
+                ADVANCE
             } else {
-                fout << "\nSyntax Error, expecting ';' before '" ERROR_FOUND
+                cout << "\nSyntax Error, expecting ';' before '" ERROR_FOUND
             }
         } else {
-            fout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
         }
     } else {
-        fout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
     }
 }
 
 void Parser::Scan() {
-    
-    if (printSwitch)
-        fout << "\t<Scan> ::= get (<IDs>);\n";
-    
-    ADVANCE_AND_PRINT
+
+    ADVANCE
     if (currentToken.lexeme == "(") {
         add_instr("STDIN", -1); stdinflag = true; // INSTR
-        ADVANCE_AND_PRINT
+        ADVANCE
         IDs();
         if (currentToken.lexeme == ")") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             if (currentToken.lexeme == ";") {
-                ADVANCE_AND_PRINT
+                ADVANCE
             } else {
-                fout << "\nSyntax Error. Expecting ';' before '" ERROR_FOUND
+                cout << "\nSyntax Error. Expecting ';' before '" ERROR_FOUND
             }
         } else {
-            fout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
         }
     } else {
-        fout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
     }
 }
 
 void Parser::While() {
     
-    if (printSwitch)
-    fout << "\t<While> ::= while (<Condition>) <Statement>\n";
-    
     addr = InstructionTable.size() + 1;
     add_instr("LABEL", -1);
     
-    ADVANCE_AND_PRINT
+    ADVANCE
     if (currentToken.lexeme == "(") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Condition();
         if (currentToken.lexeme == ")") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             Statement();
-            add_instr("JUMP", addr); // INSTR
-            back_patch(); // INSTR
+            add_instr("JUMP", addr); // INSTRUCTION
+            back_patch(); // INSTRUCTION
         } else {
-            fout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
         }
     } else {
-        fout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '(' before '" ERROR_FOUND
     }
 }
 
 void Parser::Condition() {
-    
-    if (printSwitch)
-        fout << "\t<Condition> ::= <Expression> <Relop> <Expression>\n";
     
     Expression();
     Relop();
@@ -528,96 +457,72 @@ void Parser::Condition() {
 
 void Parser::Relop() {
     
-    if (printSwitch)
-        fout << "\t<Relop> ::= == | ^= | > | < | => | =<\n";
-    
     if (currentToken.lexeme == "==" || currentToken.lexeme == "^=" || currentToken.lexeme == ">"
         || currentToken.lexeme == "<" || currentToken.lexeme == "=>" || currentToken.lexeme == "=<") {
         symboltype = currentToken.lexeme;
-        ADVANCE_AND_PRINT
+        ADVANCE
     }
     else
     {
-        fout << "\nSyntax error, expecting valid comparison operator before " ERROR_FOUND
+        cout << "\nSyntax error, expecting valid comparison operator before " ERROR_FOUND
     }
 }
 
 void Parser::Expression() {
-    
-    if (printSwitch)
-        fout << "\t<Expression> ::= <Term> <Expression Prime>\n";
-    
     Term();
     ExpressionPrime();
 }
 
 void Parser::ExpressionPrime() {
-   
-    if (printSwitch)
-        fout << "\t<Expression Prime> ::= + <Term> <Expression Prime> | - <Term> <Expression Prime> | <Empty>\n";
     
     if (currentToken.lexeme == "+") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Term();
         add_instr("ADD", -1);
         ExpressionPrime();
     } else if (currentToken.lexeme == "-") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Term();
         add_instr("SUB", -1);
         ExpressionPrime();
     } else if (currentToken.token == "Unknown") {
-        fout << "\nSyntax error, expecting '+', '-', or nothing before '" ERROR_FOUND
+        cout << "\nSyntax error, expecting '+', '-', or nothing before '" ERROR_FOUND
     } else {
         Empty();
     }
 }
 
 void Parser::Term() {
-    
-    if (printSwitch)
-        fout << "\t<Term> ::= <Factor> <Term Prime>\n";
-    
     Factor();
     TermPrime();
 }
 
 void Parser::TermPrime() {
-    
-    if (printSwitch)
-        fout <<  "\t<Term Prime> ::= * <Factor> <Term Prime> | / <Factor> <Term Prime> | <Empty>\n";
-    
     if (currentToken.lexeme == "*") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Factor();
         add_instr("MUL", -1);
         TermPrime();
     } else if (currentToken.lexeme == "/") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Factor();
         add_instr("DIV", -1);
         TermPrime();
     } else if (currentToken.token == "Unknown") {
-        fout << "\nSyntax Error, expecting '*', '/', or 'Empty' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '*', '/', or 'Empty' before '" ERROR_FOUND
     } else {
         Empty();
     }
 }
 
 void Parser::Factor() {
-    
-    if (printSwitch)
-        fout << "\t<Factor> ::= - <Primary> | <Primary>\n";
-    
     if (currentToken.lexeme == "-") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Primary();
     } else if (currentToken.token != "Unknown") {
         Primary();
-    }
-    
-    else {
-        fout << "\nSyntax Error, expecting something different before '" ERROR_FOUND
+    } else {
+        cout << "\nSyntax Error, expecting something different before '" ERROR_FOUND
     }
 }
 
@@ -627,52 +532,46 @@ void Parser::Primary() {
      *             real type REMOVE         *
      *                                      */
     
-    if (printSwitch)
-        fout << "\t<Primary> ::= <Identifier> | <Integer> | <Identifier> [<IDs>] | (<Expression>) | true | false\n";
-    
     if (currentToken.token == "Identifier") {
         add_instr("PUSHM", get_address(currentToken));
-        ADVANCE_AND_PRINT
+        ADVANCE
         if (currentToken.lexeme == "[") {
-            ADVANCE_AND_PRINT
+            ADVANCE
             IDs();
             if (currentToken.lexeme == "]") {
-                ADVANCE_AND_PRINT
+                ADVANCE
             }
             else {
-                fout << "\nSyntax Error, expecting ']' before '" ERROR_FOUND
+                cout << "\nSyntax Error, expecting ']' before '" ERROR_FOUND
             }
-        }
-        else {
-            // Do nothing
+        } else {
+            
         }
         
     } else if (currentToken.token == "Integer") {
-        ADVANCE_AND_PRINT
+        ADVANCE
     } else if (currentToken.lexeme == "(") {
-        ADVANCE_AND_PRINT
+        ADVANCE
         Expression();
         if (currentToken.lexeme == ")") {
-            ADVANCE_AND_PRINT
+            ADVANCE
         }
         else {
-            fout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
+            cout << "\nSyntax Error, expecting ')' before '" ERROR_FOUND
         }
     } else if (currentToken.lexeme == "true") {
         add_instr("PUSHI", 1);
-        ADVANCE_AND_PRINT
+        ADVANCE
     } else if (currentToken.lexeme == "false") {
         add_instr("PUSHI", 0);
-        ADVANCE_AND_PRINT
+        ADVANCE
     } else {
-        fout << "\nSyntax Error, expecting '<Identifer>', '<Qualifier>' or '<Expression>' before '" ERROR_FOUND
+        cout << "\nSyntax Error, expecting '<Identifer>', '<Qualifier>' or '<Expression>' before '" ERROR_FOUND
     }
 }
 
 void Parser::Empty() {
-    if (printSwitch)
-        fout << "\t<Empty> ::= epsilon\n";
-    
+    // <Empty> ::= ε
 }
 
 
