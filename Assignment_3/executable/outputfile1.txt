@@ -6,3 +6,8 @@ cab                 2002           int
 isConverted         2003           boolean        
 
 
+--------- Instruction Table ---------
+1.   PUSHM     2000           
+2.   PUSHM     2001           
+3.   PUSHM     2002           
+4.   PUSHM     2003           

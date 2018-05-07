@@ -7,19 +7,25 @@ omg                 2003           int
 
 
 --------- Instruction Table ---------
-1.   PUSHI     0              
-2.   POPM      2002           
-3.   POPM      2003           
-4.   LABEL     nil            
-5.   PUSHM     2003           
-6.   GRT       nil            
-7.   JUMPZ     nil            
-8.   PUSHM     2002           
-9.   PUSHI     1              
-10.  NEQ       nil            
-11.  JUMPZ     17             
-12.  POPM      2000           
-13.  PUSHM     2003           
-14.  SUB       nil            
-15.  POPM      2003           
-16.  JUMP      4              
+1.   PUSHM     2000           
+2.   PUSHM     2001           
+3.   PUSHM     2002           
+4.   PUSHM     2003           
+5.   PUSHI     0              
+6.   POPM      2002           
+7.   PUSHI     5              
+8.   POPM      2003           
+9.   LABEL     nil            
+10.  PUSHI     3              
+11.  GRT       nil            
+12.  JUMPZ     nil            
+13.  LABEL     nil            
+14.  PUSHI     1              
+15.  NEQ       nil            
+16.  JUMPZ     23             
+17.  PUSHI     4              
+18.  POPM      2000           
+19.  PUSHI     1              
+20.  SUB       nil            
+21.  POPM      2003           
+22.  JUMP      9              
